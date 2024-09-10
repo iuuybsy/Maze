@@ -5,12 +5,13 @@ import matplotlib.pyplot as plt
 import random
 
 
-class BinaryTreeGen:
+class SidWinderGen:
     def __init__(self):
         self.connect = [[False for _ in range(WIDTH * HEIGHT)] for __ in range(WIDTH * HEIGHT)]
 
     def gen(self):
         for j in range(HEIGHT - 1):
+            last_run = 0
             for i in range(WIDTH - 1):
                 guess = random.randint(0, 1)
                 if guess == 0:
@@ -18,12 +19,14 @@ class BinaryTreeGen:
                     ind2 = grid_to_list(i + 1, j)
                     self.connect[ind1][ind2] = True
                 else:
-                    ind1 = grid_to_list(i, j)
-                    ind2 = grid_to_list(i, j + 1)
+                    rand_ind = random.randint(last_run, i)
+                    last_run = i + 1
+                    ind1 = grid_to_list(rand_ind, j)
+                    ind2 = grid_to_list(rand_ind, j + 1)
                     self.connect[ind1][ind2] = True
-        for j in range(HEIGHT - 1):
-            ind1 = grid_to_list(WIDTH - 1, j)
-            ind2 = grid_to_list(WIDTH - 1, j + 1)
+            rand_ind = random.randint(last_run, WIDTH - 1)
+            ind1 = grid_to_list(rand_ind, j)
+            ind2 = grid_to_list(rand_ind, j + 1)
             self.connect[ind1][ind2] = True
         for i in range(WIDTH - 1):
             ind1 = grid_to_list(i, HEIGHT - 1)
