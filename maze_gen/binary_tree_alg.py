@@ -17,18 +17,22 @@ class BinaryTreeGen:
                     ind1 = grid_to_list(i, j)
                     ind2 = grid_to_list(i + 1, j)
                     self.connect[ind1][ind2] = True
+                    self.connect[ind2][ind1] = True
                 else:
                     ind1 = grid_to_list(i, j)
                     ind2 = grid_to_list(i, j + 1)
                     self.connect[ind1][ind2] = True
+                    self.connect[ind2][ind1] = True
         for j in range(HEIGHT - 1):
             ind1 = grid_to_list(WIDTH - 1, j)
             ind2 = grid_to_list(WIDTH - 1, j + 1)
             self.connect[ind1][ind2] = True
+            self.connect[ind2][ind1] = True
         for i in range(WIDTH - 1):
             ind1 = grid_to_list(i, HEIGHT - 1)
             ind2 = grid_to_list(i + 1, HEIGHT - 1)
             self.connect[ind1][ind2] = True
+            self.connect[ind2][ind1] = True
 
         self.maze_render()
         self.refresh()
