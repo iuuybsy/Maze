@@ -75,7 +75,9 @@ class AldousBroderGen:
     def refresh(self):
         self.connect.clear()
         self.connect = [[False for _ in range(WIDTH * HEIGHT)] for __ in range(WIDTH * HEIGHT)]
-        self.total = WIDTH * HEIGHT
+        self.unvisited.clear()
+        self.unvisited = [[True for _ in range(WIDTH)] for __ in range(HEIGHT)]
+        self.total: int = WIDTH * HEIGHT
 
 
 

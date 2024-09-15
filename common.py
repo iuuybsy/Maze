@@ -5,8 +5,8 @@ SEARCH_DIRECTION = [[0, 1], [0, -1], [1, 0], [-1, 0]]
 
 
 def list_to_grid(ind: int):
-    x = ind % WIDTH
-    y = ind / (ind - x)
+    x: int = ind % WIDTH
+    y: int = (ind - x) // WIDTH
     return x, y
 
 
