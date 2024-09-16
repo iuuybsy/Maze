@@ -2,17 +2,18 @@ from common import WIDTH, HEIGHT
 from common import grid_to_list
 from common import list_to_grid
 from common import SEARCH_DIRECTION
+from common import MyStack
 
 import matplotlib.pyplot as plt
 import random
 
 
-class HuntAndKillGen:
+class RecursiveBacktrackerGen:
     def __init__(self):
         self.connect = [[False for _ in range(WIDTH * HEIGHT)] for __ in range(WIDTH * HEIGHT)]
         self.unvisited = [[True for _ in range(WIDTH)] for __ in range(HEIGHT)]
         self.total: int = WIDTH * HEIGHT
-        self.potential_fork = []
+        self.stack = MyStack()
 
     def gen(self):
         x = random.randint(0, WIDTH - 1)
@@ -23,7 +24,7 @@ class HuntAndKillGen:
         self.unvisited[x][y] = False
         self.total -= 1
         while self.total > 0:
-            self.potential_fork.clear()
+            self.stack.push(grid_to_list(x, y))
             count = 0
             for i in range(len(SEARCH_DIRECTION)):
                 x_next_temp = x + SEARCH_DIRECTION[i][0]
@@ -33,17 +34,13 @@ class HuntAndKillGen:
                 elif not self.unvisited[x_next_temp][y_next_temp]:
                     count += 1
             if count == 4:
-                for i in range(WIDTH):
-                    for j in range(HEIGHT):
-                        if not self.unvisited[i][j]:
-                            forks = self.count_unvisited_neighbour(i, j)
-                            if forks > 0:
-                                fork_ind = grid_to_list(i, j)
-                                self.potential_fork.append(fork_ind)
-                random_choose = random.randint(0, len(self.potential_fork) - 1)
-                start_ind = self.potential_fork[random_choose]
-                x, y = list_to_grid(start_ind)
-
+                top_ind = self.stack.top()
+                x_top, y_top = list_to_grid(top_ind)
+                while self.count_unvisited_neighbour(x_top, y_top) == 0:
+                    self.stack.pop()
+                    top_ind = self.stack.top()
+                    x_top, y_top = list_to_grid(top_ind)
+                x, y = x_top, y_top
             direction = random.randint(0, len(SEARCH_DIRECTION) - 1)
             x_next = x + SEARCH_DIRECTION[direction][0]
             y_next = y + SEARCH_DIRECTION[direction][1]
@@ -114,7 +111,7 @@ class HuntAndKillGen:
         self.unvisited.clear()
         self.unvisited = [[True for _ in range(WIDTH)] for __ in range(HEIGHT)]
         self.total: int = WIDTH * HEIGHT
-        self.potential_fork.clear()
+        self.stack.clear()
 
 
 
