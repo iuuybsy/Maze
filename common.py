@@ -1,5 +1,6 @@
 WIDTH = 20
 HEIGHT = 20
+MAX_LENGTH_EVER = WIDTH * HEIGHT + 1
 
 SEARCH_DIRECTION = [[0, 1], [0, -1], [1, 0], [-1, 0]]
 

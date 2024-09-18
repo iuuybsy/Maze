@@ -10,7 +10,7 @@ import random
 class WilsonGen:
     def __init__(self):
         self.connect = [[False for _ in range(WIDTH * HEIGHT)] for __ in range(WIDTH * HEIGHT)]
-        self.unvisited = [[True for _ in range(WIDTH)] for __ in range(HEIGHT)]
+        self.unvisited = [[True for _ in range(HEIGHT)] for __ in range(WIDTH)]
         x_rand = random.randint(0, WIDTH - 1)
         y_rand = random.randint(0, HEIGHT - 1)
         self.unvisited[x_rand][y_rand] = False

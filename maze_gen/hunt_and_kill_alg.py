@@ -10,7 +10,7 @@ import random
 class HuntAndKillGen:
     def __init__(self):
         self.connect = [[False for _ in range(WIDTH * HEIGHT)] for __ in range(WIDTH * HEIGHT)]
-        self.unvisited = [[True for _ in range(WIDTH)] for __ in range(HEIGHT)]
+        self.unvisited = [[True for _ in range(HEIGHT)] for __ in range(WIDTH)]
         self.total: int = WIDTH * HEIGHT
         self.potential_fork = []
 
