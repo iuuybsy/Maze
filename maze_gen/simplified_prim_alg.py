@@ -1,0 +1,119 @@
+from common import WIDTH, HEIGHT
+from common import grid_to_list
+from common import list_to_grid
+from common import SEARCH_DIRECTION
+
+import matplotlib.pyplot as plt
+import random
+
+
+class SimplifiedPrimGen:
+    def __init__(self):
+        self.connect = [[False for _ in range(WIDTH * HEIGHT)] for __ in range(WIDTH * HEIGHT)]
+        self.unvisited = [[True for _ in range(HEIGHT)] for __ in range(WIDTH)]
+        self.total: int = WIDTH * HEIGHT
+        self.dict = {}
+
+    def gen(self):
+        x = random.randint(0, WIDTH - 1)
+        y = random.randint(0, HEIGHT - 1)
+        ind = grid_to_list(x, y)
+        while self.total > 0:
+            if self.total == WIDTH * HEIGHT:
+                count = self.count_neighbour(x, y)
+                self.dict[ind] = count
+                self.total -= 1
+                self.unvisited[x][y] = False
+                continue
+
+            explore_list = list(self.dict.keys())
+            choose = 0
+            if len(explore_list) > 1:
+                choose = random.randint(0, len(explore_list) - 1)
+            ind = explore_list[choose]
+            x, y = list_to_grid(ind)
+
+            direction = random.randint(0, len(SEARCH_DIRECTION) - 1)
+            x_next = x + SEARCH_DIRECTION[direction][0]
+            y_next = y + SEARCH_DIRECTION[direction][1]
+            while (not self.is_valid_cord(x_next, y_next)) or (not self.unvisited[x_next][y_next]):
+                direction = random.randint(0, len(SEARCH_DIRECTION) - 1)
+                x_next = x + SEARCH_DIRECTION[direction][0]
+                y_next = y + SEARCH_DIRECTION[direction][1]
+
+            next_count = self.count_neighbour(x_next, y_next)
+            next_ind = grid_to_list(x_next, y_next)
+            if next_count > 0:
+                self.dict[next_ind] = next_count
+            self.update_dict(x_next, y_next)
+            self.unvisited[x_next][y_next] = False
+            self.total -= 1
+            self.connect[ind][next_ind] = True
+            self.connect[next_ind][ind] = True
+        self.maze_render()
+        self.refresh()
+
+    def count_neighbour(self, x: int, y: int) -> int:
+        count = 0
+        for i in range(len(SEARCH_DIRECTION)):
+            x_next = x + SEARCH_DIRECTION[i][0]
+            y_next = y + SEARCH_DIRECTION[i][1]
+            if self.is_valid_cord(x_next, y_next):
+                if self.unvisited[x_next][y_next]:
+                    count += 1
+        return count
+
+    def update_dict(self, x: int, y: int):
+        for i in range(len(SEARCH_DIRECTION)):
+            x_next = x + SEARCH_DIRECTION[i][0]
+            y_next = y + SEARCH_DIRECTION[i][1]
+            if self.is_valid_cord(x_next, y_next):
+                next_ind = grid_to_list(x_next, y_next)
+                if next_ind in self.dict.keys():
+                    self.dict[next_ind] -= 1
+                    if self.dict[next_ind] == 0:
+                        self.dict.pop(next_ind)
+
+    @classmethod
+    def is_valid_cord(cls, x: int, y: int):
+        return 0 <= x < WIDTH and 0 <= y < HEIGHT
+
+    def maze_render(self):
+        fig, ax = plt.subplots(figsize=(6, 6))
+        plt.subplots_adjust(left=0.0, right=1.0, bottom=0.0, top=1.0)
+
+        for j in range(HEIGHT):
+            for i in range(WIDTH):
+                ind1 = grid_to_list(i, j)
+                ind2 = grid_to_list(i, j + 1)
+                ind3 = grid_to_list(i + 1, j)
+                if i + 1 < WIDTH:
+                    if not self.connect[ind1][ind3]:
+                        ax.plot([i + 1, i + 1], [j, j + 1], c='black')
+                if j + 1 < HEIGHT:
+                    if not self.connect[ind1][ind2]:
+                        ax.plot([i, i + 1], [j + 1, j + 1], c='black')
+
+        ax.plot([0, 0], [0, HEIGHT], c='black')
+        ax.plot([WIDTH, WIDTH], [0, HEIGHT], c='black')
+
+        ax.plot([0, WIDTH], [0, 0], c='black')
+        ax.plot([0, WIDTH], [HEIGHT, HEIGHT], c='black')
+
+        ax.set_aspect(1)
+        plt.xlim((-0.5, WIDTH + 0.5))
+        plt.ylim((-0.5, HEIGHT + 0.5))
+        plt.axis('off')
+        plt.show()
+
+    def refresh(self):
+        self.connect.clear()
+        self.connect = [[False for _ in range(WIDTH * HEIGHT)] for __ in range(WIDTH * HEIGHT)]
+        self.unvisited.clear()
+        self.unvisited = [[True for _ in range(HEIGHT)] for __ in range(WIDTH)]
+        self.total: int = WIDTH * HEIGHT
+        self.dict.clear()
+        self.dict = {}
+
+
+

@@ -4,9 +4,10 @@ from maze_gen.aldous_broder_alg import AldousBroderGen
 from maze_gen.wilson_alg import WilsonGen
 from maze_gen.hunt_and_kill_alg import HuntAndKillGen
 from maze_gen.recursive_backtracker_alg import RecursiveBacktrackerGen
+from maze_gen.simplified_prim_alg import SimplifiedPrimGen
 
 
-test = RecursiveBacktrackerGen()
+test = SimplifiedPrimGen()
 test.gen()
 
 
